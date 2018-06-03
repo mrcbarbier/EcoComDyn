@@ -149,7 +149,7 @@ def test_smallS(nsys=20000):
         for m,measure in zip(models[S],loctable):
             # code_debugger()
             #THEORETICAL PREDICTIONS WITH IMPOSED PARAMETER VALUES
-            prefix = 'n_couplings_cavity_'
+            prefix = 'n_couplings_'
             meas2[prefix + 'mu'] = [ kwargs['community_mean'], compute('mu',populations[S]) ][-1]
             meas2[prefix+'sigma'] =[kwargs['community_std'] , compute('sigma',populations[S]) ][-1]
             meas2[prefix + 'gamma']=[kwargs['community_symmetry'], compute('gamma',populations[S]) ][-1]

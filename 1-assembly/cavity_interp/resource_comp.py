@@ -307,7 +307,7 @@ def imitate_model(inpath,outpath,use_measures=None,rerun=1,reproduce_corrKA=1,
 
         #test={}
         #measure_gen(newmodel,test,typ='effective')
-        #print [(measure['predicted_'+z], test['n_couplings_cavity_'+z]) for z in
+        #print [(measure['predicted_'+z], test['n_couplings_'+z]) for z in
             #('mu','sigma','gamma')]
 
         table=[dic]
@@ -662,11 +662,9 @@ def intersection(rerun=1,measure=0,nsys=100,show=0):
     X=0.991
     kwargs['consumption_std'] = np.sqrt(cmean**2  *( 1/X -1) )
 
-
     axes=[
                 ( 'sys',range(nsys) )
         ]
-
 
     if rerun:
         loop(path=path,axes=axes,check_key=0,print_msg=1,converge=1,tmax=500000,tsample=15000.,
@@ -686,7 +684,7 @@ def intersection(rerun=1,measure=0,nsys=100,show=0):
     show_hist(measures=measures,axes=['n_shape'], values=['n_abundance'],log='y' ,bins=30)
     from cavity import cavity_distri
     xs=np.linspace(0,0.5,100)
-    sigma,mu,gamma=[measures['n_couplings_cavity_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
+    sigma,mu,gamma=[measures['n_couplings_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
     dist=cavity_distri(S=2000,sigma=sigma,sigma_k=0,mu=mu,gamma=gamma)
     plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 )
     plt.xlabel(r'Abundance $n_i$')
@@ -894,70 +892,72 @@ def resource_axis_prm(path=Path('interp_resource_axis_prm'),mode='niche',rerun=0
 
 #intersection()
 
-path='interp_resource_axis'
-if 0:
-    from cavity_interp_run import imitate
-    imitate(path,path+'_imit',rerun=1,
-        use_measures=['usual','effective',measure_cavity,'matrix'])
+if __name__ == '__main__':
+
+    path='interp_resource_axis'
+    if 0:
+        from cavity_interp_run import imitate
+        imitate(path,path+'_imit',rerun=1,
+            use_measures=['usual','effective',measure_cavity,'matrix'])
 
 
-if 0:
-    resource_axis(path=Path(path),mode='niche',
-        rerun=0,measure=0,nsys=5,show=1,imit=1,tmax=500000)
+    if 0:
+        resource_axis(path=Path(path),mode='niche',
+            rerun=0,measure=0,nsys=5,show=1,imit=1,tmax=500000)
 
-if 0:
-    path='interp_resource_axis_prm'
-    resource_axis_prm(path=Path(path),mode='all',
-        rerun=0,measure=0,nsys=10,show=1,imit=0,tmax=0)
+    if 0:
+        path='interp_resource_axis_prm'
+        resource_axis_prm(path=Path(path),mode='all',
+            rerun=0,measure=0,nsys=10,show=1,imit=0,tmax=0)
 
-if 0:
-    path='interp_resource_axis_rdm'
-    resource_axis(path=Path(path),mode='randomize',
-        rerun=0,measure=0,nsys=5,show=1,imit=1,tmax=500000)
+    if 0:
+        path='interp_resource_axis_rdm'
+        resource_axis(path=Path(path),mode='randomize',
+            rerun=0,measure=0,nsys=5,show=1,imit=1,tmax=500000)
 
-#-------------------------------------------------------------------------
-
-
-
-mode='RX'
-if mode=='R':
-    path='interp_resource_gen_normal'
-elif mode=='X':
-    path='interp_resource_gen_normal_X'
-elif mode=='RX':
-    path='interp_resource_gen_normal_RX_small'
-if 0:
-    from cavity_interp_run import imitate
-    imitate_model(path,path+'_imit',rerun=1,measure_func=measure_resource,
-        use_measures=['usual','effective',measure_cavity,'matrix'])
-
-if 1:
-    resource_gen(path=Path(path),
-        mode=mode,
-        rerun=0,measure=0,nsys=70,show=1,imit=0)
+    #-------------------------------------------------------------------------
 
 
-#-------------------------------------------------------------------------
 
-mode =['R','Z','Z2'][0]
+    mode='RX'
+    if mode=='R':
+        path='interp_resource_gen_normal'
+    elif mode=='X':
+        path='interp_resource_gen_normal_X'
+    elif mode=='RX':
+        path='interp_resource_gen_normal_RX_small'
+    if 0:
+        from cavity_interp_run import imitate
+        imitate_model(path,path+'_imit',rerun=1,measure_func=measure_resource,
+            use_measures=['usual','effective',measure_cavity,'matrix'])
 
-if mode =='R':
-    path='interp_resource_spec_normal'
-if mode=='Z':
-    path='interp_resource_spec_normal_Z'
-if mode=='Z2':
-    path='interp_resource_spec_normal_Z2'
-
-if 0:
-    from cavity_interp_run import imitate
-    imitate_model(path,path+'_imit',rerun=1,measure_func=measure_resource_spec,
-        reproduce_connectivity=0,
-        use_measures=['usual','effective',measure_cavity,'matrix'])
-
-if 1:
-    resource_spec(path=Path(path),
-        mode=mode,
-        rerun=0,measure=0,nsys=3,show=1,imit=0)
+    if 1:
+        resource_gen(path=Path(path),
+            mode=mode,
+            rerun=0,measure=0,nsys=70,show=1,imit=0)
 
 
-#-------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
+
+    mode =['R','Z','Z2'][0]
+
+    if mode =='R':
+        path='interp_resource_spec_normal'
+    if mode=='Z':
+        path='interp_resource_spec_normal_Z'
+    if mode=='Z2':
+        path='interp_resource_spec_normal_Z2'
+
+    if 0:
+        from cavity_interp_run import imitate
+        imitate_model(path,path+'_imit',rerun=1,measure_func=measure_resource_spec,
+            reproduce_connectivity=0,
+            use_measures=['usual','effective',measure_cavity,'matrix'])
+
+    if 1:
+        resource_spec(path=Path(path),
+            mode=mode,
+            rerun=0,measure=0,nsys=3,show=1,imit=0)
+
+
+    #-------------------------------------------------------------------------

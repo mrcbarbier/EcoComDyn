@@ -25,7 +25,7 @@ def cavity_output(prm,**kwargs):
     """Properly formats output of cavity_solve"""
     S=prm['n_shape'][0]
     try:
-        prefix='n_couplings_cavity_'
+        prefix='n_couplings_'
         mu=prm[prefix+'mu']
         sigma=prm[prefix+'sigma']
         #sigma =prm[prefix+'sigma']
@@ -52,7 +52,7 @@ def cavity_output(prm,**kwargs):
 def cavity_rowstd_output(prm,**kwargs):
     """Properly formats output of cavity_solve, separating col and row std"""
     S=prm['n_shape'][0]
-    prefix='n_couplings_cavity_'
+    prefix='n_couplings_'
     mu=prm[prefix+'mu']
     sigma=prm['n_couplings_col_sigma']
     gamma=prm[prefix+'gamma']

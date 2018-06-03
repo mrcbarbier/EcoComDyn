@@ -71,7 +71,7 @@ def imitate(inpath,outpath,use_measures=None,rerun=1,reproduce_corrKA=1,
         tmax,tsample=measure['tmax'],measure['tsample']
         prm=deepcopy(dft_prm)
         dyn=deepcopy(dft_dyn)
-        prefix='n_couplings_cavity_'
+        prefix='n_couplings_'
 
         if reproduce_connectivity:
             conn=measure['n_connectivity']
@@ -233,7 +233,7 @@ def gamma_role(rerun=0,measure=0,nsys=10,show=0):
     show_hist(measures=measures,axes=axes, values=['n_abundance'] )
     from cavity import cavity_distri
     xs=np.linspace(0,0.5,100)
-    sigma,mu,gamma=[measures['n_couplings_cavity_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
+    sigma,mu,gamma=[measures['n_couplings_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
     dist=cavity_distri(S=2000,sigma=sigma,sigma_k=0,mu=mu,gamma=gamma)
     plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 )
     plt.xlabel(r'Abundance $n_i$')
@@ -309,6 +309,7 @@ def model_nei(S=100,c=1,mu=10,sigma=.5, gamma=-0.05,zeta=.3,Nc=10,**kwargs):
     return {'sigma':sigma*np.sqrt(k)/S,'mu':mu*k/S,'gamma':gamma,'sigma_k':zeta }
 
 def compare_prms_models(models,mode='trace'):
+    '''Compare prms from analytics'''
     import pandas as pd
 
     #spaces=[('mu','sigma'),('sigma','gamma'),('sigma','zeta') ]
@@ -325,7 +326,7 @@ def compare_prms_models(models,mode='trace'):
         Y=space[1]
         plt.xlabel(r'$\{}$'.format(X ) )
         plt.ylabel(r'$\{}$'.format(Y) )
-
+        legends=[]
         for im,m in enumerate(models):
             color=get_cmap(im,len(models))
             model,mdict=m
@@ -380,7 +381,7 @@ def compare_prms_models(models,mode='trace'):
                 pts = pts[0::2]  # Deleting duplicates
                 pts.insert(len(pts), pts[0])
                 k = 1.1
-                poly = Polygon(k*(np.array(pts)- cent) + cent ,alpha=0.1)
+                poly = Polygon(k*(np.array(pts)- cent) + cent ,alpha=0.5,facecolor=color )
                                #facecolor=color, alpha=1)
                 poly.set_capstyle('round')
                 plt.gca().add_patch(poly)
@@ -392,11 +393,17 @@ def compare_prms_models(models,mode='trace'):
             plt.xlim(xmin=xrge[0]-xspan/2.,xmax=xrge[1]+xspan/2.)
             plt.ylim(ymin=yrge[0]-yspan/2.,ymax=yrge[1]+yspan/2.)
             plt.tight_layout()
+            if 'legend' in mdict:
+                legends.append(mdict['legend'] )
+        if legends:
+            plt.legend(legends)
     plt.show()
 
 
 
 def compare_prms(paths=[],options={}):
+    '''Compare prms from simulations'''
+
     axes={'sigma':'n_couplings_sigma','mu':'n_couplings_mu',
         'zeta':'n_capacity_std','gamma':'n_couplings_gamma'}
     measures=[]
@@ -426,9 +433,9 @@ def compare_prms(paths=[],options={}):
 
 
 
-def intersection(rerun=0,nsys=10,measure=0,show=0):
+def intersection(path=Path('interp_intersection'),rerun=0,nsys=10,measure=0,show=0):
     #Comparison between competitive, trophic
-    path=Path('interp_intersection')
+
     if 0:
         compare_prms_models(
             [
@@ -456,8 +463,8 @@ def intersection(rerun=0,nsys=10,measure=0,show=0):
             'variables':[('n','com'),('n','com') ],
             'role':'fluxes',
             'save':False,
-            'mean':20./100., 'std':1./100,
             'sign':1,
+            'mean':20./100., 'std':1./100,
             }
         prm['commtroph']={
             'type':'matrix',
@@ -469,6 +476,7 @@ def intersection(rerun=0,nsys=10,measure=0,show=0):
             'ordered':0,
             'dynamics':None,
             'diagonal':0,
+            'mean':1,
             }
 
         prm['community'].update(
@@ -484,7 +492,7 @@ def intersection(rerun=0,nsys=10,measure=0,show=0):
 
         specs=[ (None,'nlv'),('nlv',None) ]
         axes=[
-                ( ('commtroph_dynamics','community_dynamics'),specs ),
+                ( ('commtroph_dynamics','community_dynamics'),specs[1:] ),
                 ( 'sys',range(nsys) )
         ]
 
@@ -510,14 +518,16 @@ def intersection(rerun=0,nsys=10,measure=0,show=0):
     measures['commtroph_dynamics'][measures['commtroph_dynamics'].isnull()]=0
     measures['commtroph_dynamics'][measures['commtroph_dynamics']=='nlv']=1
 
-    show_hist(measures=measures,axes=axes, values=['n_abundance'],dictionary=dico ,log='y')
+    hists=show_hist(measures=measures,axes=axes, values=['n_abundance'],dictionary=dico ,log='',bins=30)
     from cavity import cavity_distri
     xs=np.linspace(0,np.max( [np.max(z) for z in measures['n_abundance']]),100)
-    sigma,mu,gamma=[measures['n_couplings_cavity_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
+    sigma,mu,gamma=[measures['n_couplings_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
     #sigma,mu,gamma=1,10,-1
     dist=cavity_distri(S=2000,sigma=sigma,sigma_k=measures['n_capacity_std'].mean(),mu=mu,gamma=gamma)
-    plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 ,log='y')
+    plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 ,log='')
     #plt.xlabel(r'Abundance $n_i$')
+    # print np.sum(hists['n_abundance'][1][1:])*1./np.sum(hists['n_abundance'][1]),np.sum([dist(x) for x in xs[:-1]]*(xs[1:]-xs[:-1])  )
+    # plt.bar(0,np.sum(hists['n_abundance'][1][1])*(1-np.sum([dist(x) for x in xs[:-1]]*(xs[1:]-xs[:-1])  )), width=0.01 )
 
 
     #plot_main(measures=measures,axes=axes)
@@ -529,7 +539,7 @@ def intersection(rerun=0,nsys=10,measure=0,show=0):
 
 if __name__=='__main__':
     if 0:
-        intersection(rerun=0,nsys=100,measure=0,show=1)
+        intersection(rerun=0,nsys=10,measure=0,show=1)
     if 0:
         compare_prms( paths=[ 'interp_mutualism_nested', 'interp_resource_gen_normal_RX',
         'trophic_order_stupid'

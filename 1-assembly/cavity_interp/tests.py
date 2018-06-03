@@ -249,7 +249,7 @@ def test_extinction(rerun=0,measure=0,nsys=10,show=0):
     show_hist(measures=measures,axes=axes, values=['n_abundance'] )
     from cavity import cavity_distri
     xs=np.linspace(0,0.5,100)
-    sigma,mu,gamma=[measures['n_couplings_cavity_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
+    sigma,mu,gamma=[measures['n_couplings_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
     dist=cavity_distri(S=2000,sigma=sigma,sigma_k=0,mu=mu,gamma=gamma)
     plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 )
     plt.xlabel(r'Abundance $n_i$')

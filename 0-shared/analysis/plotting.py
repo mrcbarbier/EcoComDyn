@@ -105,6 +105,7 @@ def show_hist(axes=None,values=None,**kwargs):
     dico=kwargs.get('dictionary',{})
     def get_dico(val):
         return dico.get(val,val)
+    results={}
     for val in values:
         if nbpanels>1:
             auto_subplot(plt,nbpanels,panel)
@@ -127,7 +128,8 @@ def show_hist(axes=None,values=None,**kwargs):
                 plot(c[0],c[1],hold=1,linestyle='None',marker='o',**{k:kwargs[k] for k in kwargs if
                     k in ('log',) })
             plt.legend(legends)
-
+            results[val] = coords
+    return results
 
 def make_figure(idx,mat,title='',newfig=1,axes=None,values=None,runavg=None,
         style='heatmap',log='',zrange=None,logcutoff=10**-10,**kwargs):

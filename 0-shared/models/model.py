@@ -190,7 +190,7 @@ class BaseModel(object):
                 model.data[label]=network
             except Exception as e:
                 if not (label in model.results or prm['type']=='variable') and prm.get('save',1):
-                    print 'MODEL LOAD ERROR:',e
+                    print 'WARNING: Model.load',e
 
 
         models=[]

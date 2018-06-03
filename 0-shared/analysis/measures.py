@@ -403,7 +403,7 @@ def measure_gen(model,measure,typ='usual',**kwargs):
             elif 0:
                 CIJ=solve_lyapunov(J,-D )
                 from datatools import scatter,plot,hist
-                prefix='n_couplings_cavity_'
+                prefix='n_couplings_'
                 mu=measure[prefix+'mu']
                 sigma=measure[prefix+'sigma']
                 gamma=measure[prefix+'gamma']

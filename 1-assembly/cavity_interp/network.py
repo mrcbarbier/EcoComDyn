@@ -236,7 +236,7 @@ def ordering(path=Path('ordering'),mode='dft',struct='all',
             measures=measures[measures['community_structure']==struct]
         show_hist(measures=measures[measures['community_order']==1],axes=axes, values=['n_abundance'],dictionary=dico ,log='y')
 
-        sigma,mu,gamma=[measures['n_couplings_cavity_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
+        sigma,mu,gamma=[measures['n_couplings_'+z].mean() for z in ('sigma', 'mu','gamma')  ]
         zeta=measures['n_capacity_std'].mean()
         from cavity import cavity_distri
         print sigma, mu ,gamma
