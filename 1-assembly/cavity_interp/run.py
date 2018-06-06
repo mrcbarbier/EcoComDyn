@@ -308,7 +308,7 @@ def model_nei(S=100,c=1,mu=10,sigma=.5, gamma=-0.05,zeta=.3,Nc=10,**kwargs):
     k=S*c
     return {'sigma':sigma*np.sqrt(k)/S,'mu':mu*k/S,'gamma':gamma,'sigma_k':zeta }
 
-def compare_prms_models(models,mode='trace'):
+def compare_prms_models(models,mode='trace',hold=0):
     '''Compare prms from analytics'''
     import pandas as pd
 
@@ -397,11 +397,13 @@ def compare_prms_models(models,mode='trace'):
                 legends.append(mdict['legend'] )
         if legends:
             plt.legend(legends)
-    plt.show()
+
+    if not hold:
+        plt.show()
 
 
 
-def compare_prms(paths=[],options={}):
+def compare_prms(paths=[],options={},hold=0):
     '''Compare prms from simulations'''
 
     axes={'sigma':'n_couplings_sigma','mu':'n_couplings_mu',
@@ -429,11 +431,12 @@ def compare_prms(paths=[],options={}):
             x=measure[axes[X]]
             y=measure[axes[Y]]
             scatter(x,y,hold=1,**plotopts)
-    plt.show()
+    if not hold:
+        plt.show()
 
 
 
-def intersection(path=Path('interp_intersection'),rerun=0,nsys=10,measure=0,show=0):
+def intersection(path=Path('interp_intersection'),rerun=0,nsys=10,measure=0,show=0,hold=0):
     #Comparison between competitive, trophic
 
     if 0:
@@ -534,8 +537,8 @@ def intersection(path=Path('interp_intersection'),rerun=0,nsys=10,measure=0,show
     #plot_cavity(measures=measures, axes=axes,)
 
 
-
-    plt.show()
+    if not hold:
+        plt.show()
 
 if __name__=='__main__':
     if 0:

@@ -96,7 +96,7 @@ def measure_mixture(model,measure,**kwargs):
     measure.update(res )
 
 def mixture(path=Path('mixture'),mode=['dft'][0],
-        rerun=0,measure=0,nsys=3,show=0,imit=0):
+        rerun=0,measure=0,nsys=3,show=0,imit=0,hold=0):
 
     #MIXTURE MODEL EXAMPLE FOR PAPER
 
@@ -208,8 +208,8 @@ def mixture(path=Path('mixture'),mode=['dft'][0],
                 values=[('phi',{'style':'plot',
                         #'linestyle':'--'
                         } ),])
-
-    plt.show()
+    if not hold:
+        plt.show()
 
 
 def groups(path=Path('groups'),mode=['dft'][0],

@@ -40,9 +40,11 @@ def measure_gen(model,measure,typ='usual',**kwargs):
             measure['{}_capacity_mean'.format(var) ]=np.mean(K.matrix)
             measure['{}_selfint_std'.format(var) ]=np.std(D.matrix)
 
-
-        traj=model.results[var]
-        Nf=LabeledArray(traj.matrix[-1],axes=prm[var]['axes'])
+        try:
+            traj=model.results[var]
+            Nf=LabeledArray(traj.matrix[-1],axes=prm[var]['axes'])
+        except:
+            code_debugger()
         othax=tuple( i for i,a in enumerate(prm[var]['axes'])
              if not a == axis[-1] )
         death=kwargs.get('death',prm[var].get('death',0))

@@ -161,7 +161,7 @@ def ordering(path=Path('ordering'),mode='dft',struct='all',
 
 
     if rerun or measure:
-        # rebuild_filelist(path)
+        rebuild_filelist(path)
         make_measures(path,use_measures=['usual',
             'effective',
             ifelse(funcresp, measure_funcresp, 'usual'),
@@ -243,10 +243,12 @@ def ordering(path=Path('ordering'),mode='dft',struct='all',
         dist=cavity_distri(S=measures['n_shape'][0][0],sigma=sigma,sigma_k=zeta,mu=mu,gamma=gamma)
         xs=np.linspace(0,np.max( [np.max(z) for z in measures['n_abundance']]),100)
         plot(xs,[dist(x) for x in xs],hold=1,linewidth=2 ,log='y')
-        plt.show()
-    plt.show()
 
-def show_ordering(path='ordering'):
+
+    if not hold:
+        plt.show()
+
+def show_ordering(path='ordering',hold=0):
     path=Path(path)
     modes=['competition','predation','mutualism',]
 
@@ -320,7 +322,9 @@ def show_ordering(path='ordering'):
         # plt.axhline(5,color='k')
 
     plt.tight_layout()
-    plt.show()
+
+    if not hold:
+        plt.show()
 
 if __name__=='__main__':
     RERUN='rerun' in sys.argv

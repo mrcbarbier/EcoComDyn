@@ -314,7 +314,7 @@ def imitate_model(inpath,outpath,use_measures=None,rerun=1,reproduce_corrKA=1,
         pd.DataFrame(table).to_csv(newpath+'files.csv')
 
     rebuild_filelist(Path(outpath))
-    make_measures(Path(outpath),use_measures=use_measures,death=10**-10,
+    make_measures(Path(outpath),use_measures=use_measures,
         keep_cols=list(COLS))#,'trophic','assembly_corr'] )
 
 
@@ -399,7 +399,7 @@ def resource_spec (path=Path('interp_resource_spec'),mode=['R','Z'][0],rerun=0,
             measure_cavity,
             measure_resource_spec,
             'removal',
-            'testcavity'],death=10**-10,update_prev=0)
+            'testcavity'],death=10**-8,update_prev=0)
 
     if not show:
         return
@@ -482,7 +482,7 @@ def resource_spec (path=Path('interp_resource_spec'),mode=['R','Z'][0],rerun=0,
     plt.show()
 
 
-def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,measure=0,nsys=3,show=0,imit=0):
+def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,measure=0,nsys=3,show=0,imit=0,hold=0):
     #Resource generalist
     try:
         if not os.listdir(path):
@@ -547,7 +547,7 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
             #'removal',
             #'testcavity',
             #measure_resource
-            ],death=10**-10,update_prev=0)#,'trophic','assembly_corr'] )
+            ],death=10**-8,update_prev=0)#,'trophic','assembly_corr'] )
 
 
     if not show:
@@ -614,7 +614,7 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
         #theory=theory,Svar=Svar,
         split_by=split_by,log='x',dictionary=dico,traits=['totN','phi','simpsoninv','variability'],
         show_direct_calc=1,subplots=1)
-    plt.show()
+    # plt.show()
 
     #plot_data(measures=measures,axes=axes,values=['resource_%availability'], split_by=split_by)
     #plt.figure()
@@ -632,8 +632,9 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
     #plot_removal(measures=measures, axes=axes,
         #split_by=split_by,log='x')
 
-    plot_modelprm(measures=measures, axes=axes,
-        split_by=split_by,log='x')
+    if 0:
+        plot_modelprm(measures=measures, axes=axes,
+            split_by=split_by,log='x')
     if 0:
         plot_data(measures=measures, axes=axes,
             hold=1,
@@ -642,7 +643,8 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
                 ('measured_xi4',{'style':'scatter','log':'x','color':'r'}), ('predicted_xi4',{'style':'plot' ,'color':'r'} ) ] )
 
     #show_hist(measures=measures,axes=['r_std'], values=split_by,log='y' ,bins=30)
-    plt.show()
+    if not hold:
+        plt.show()
 
 
 def intersection(rerun=1,measure=0,nsys=100,show=0):
@@ -677,7 +679,7 @@ def intersection(rerun=1,measure=0,nsys=100,show=0):
         make_measures(path,use_measures=['usual',
             'effective',
             'abundance',
-            measure_cavity,],death=10**-10,update_prev=0)
+            measure_cavity,],death=10**-8,update_prev=0)
 
     measures=open_measures(path)
     kwargs={}
@@ -774,7 +776,7 @@ def resource_axis(path=Path('interp_resource_axis'),mode='niche',rerun=0,measure
             #'removal',
             #'testcavity',
             #measure_resource
-            ],death=10**-10,update_prev=0)
+            ],death=10**-8,update_prev=0)
 
     if not show:
         return
