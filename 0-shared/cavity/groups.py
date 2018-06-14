@@ -239,7 +239,6 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
     else:
         SIGROW2=0
 
-
     if 0 and (MU<0).any():
         test=-(s*MU.T)
         import numpy.linalg as la
@@ -343,6 +342,7 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
     X0=None
     XMF=None
     while not res.success and np.max(np.abs(res.fun))>ftol and trials_left -tries >0 :
+        newx0=0
         if (recurs_depth>5 or  tries >1) and np.max(sigma)>SIGMA_THRESH and USE_RECURS:
             kw={}
             kw.update(kwargs)
@@ -354,6 +354,7 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
                 sigma_k=sigma_k,sigma_d=sigma_d,x0=None ,logmode=False,
                 NTRIALS=2,recurs_depth=recurs_depth+1,**kwargs)[:4] )
             tries=trials_left
+            newx0=1
 
         elif x0 is None:
             #Starting from Mean Field solution
@@ -376,8 +377,10 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
 
             x0=XMF
             x0=x0.ravel()
+            newx0=1
 
-        if varmode:
+
+        if varmode and newx0:
             x0[levels:2*levels]=np.clip(x0[levels:2*levels]/x0[:levels]**2,0,100)
             x0[levels:2 * levels][x0[:levels]==0]=1
 
@@ -392,8 +395,6 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
             res.fun = funinit
         if XMF is None:
             print "    x0:",np.sum(funinit),"maxerr",np.max(funinit)
-
-
 
 
         root=sopt.root
@@ -432,6 +433,10 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
         tries+=1
 
 
+    print MU, SIGMA2, GAMMA, SIGROW2
+    if not res.success:
+        code_debugger()
+
     result= np.clip(res.x,EPS,None)
     if logmode:
         result=np.exp(np.clip( result,np.log(EPS),42  ))
@@ -461,6 +466,7 @@ def group_cavity_solve(S=(100,100),mu=1,sigma=.0,gamma=0,mean_k=1., sigma_k=0,
             print 'RECURSION DEPTH',recurs_depth, 'NTRIALS',trials_left, "SIGMA2",np.max(sigma**2)
             result[x0better]=x0[x0better]
             error=min(error, np.max(np.abs(x0error)) )
+
         handled= not DEBUG
         while not handled:
             N1,N2,V,Phi=result.reshape((4,levels))

@@ -112,7 +112,7 @@ def plot_main(measures=None,measures_imit=None,axes=None,split_by=None,log='',tr
         else:
             ax,nbrows,panels_per_row=auto_subplot(plt,len(traits),panel,rows=kwargs.get('rows',None),return_all=1)
 
-        plt.title(cavity_dico[trait])
+        plt.title(cavity_dico.get(trait,trait))
 
         if theory:
             #comparison to theory

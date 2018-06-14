@@ -14,7 +14,7 @@ dft_prm={
         'n':{
     'type':'variable',
     'axes': ('com',),
-    'death': 10.**-8,
+    'death': 10.**-10,
     'shape':(30,),
     'mean':1.,
     'std':1.,
@@ -399,7 +399,7 @@ def resource_spec (path=Path('interp_resource_spec'),mode=['R','Z'][0],rerun=0,
             measure_cavity,
             measure_resource_spec,
             'removal',
-            'testcavity'],death=10**-8,update_prev=0)
+            'testcavity'],update_prev=0)
 
     if not show:
         return
@@ -537,6 +537,13 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
             parameters=prm,dynamics=dft_dyn,
             **kwargs )
 
+    def measure_tmp(model,measure,**kwargs):
+        measure_groups(model,measure,groupby=np.ones(model.results['n'][-1].shape),)
+        measure_groups_cavity(model,measure,prefix='group_',**kwargs)
+        for z in measure:
+            if 'group' in z and hasattr(measure[z],'__iter__'):
+                measure[z]=measure[z][0]
+
     if rerun or measure:
         rebuild_filelist(path)
         make_measures(path,use_measures=['usual',
@@ -546,8 +553,9 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
             measure_cavity,
             #'removal',
             #'testcavity',
-            #measure_resource
-            ],death=10**-8,update_prev=0)#,'trophic','assembly_corr'] )
+            ifelse(mode!='RX',measure_resource,None), #If mode == RX, I do not save the r matrix (too big)
+            measure_tmp,
+            ],update_prev=0)#,'trophic','assembly_corr'] )
 
 
     if not show:
@@ -646,6 +654,12 @@ def resource_gen(path=Path('interp_resource_gen'),mode=['R','X'][0],rerun=0,meas
     if not hold:
         plt.show()
 
+    #TMP!!!!!!!!!!!!
+    gpref='group_'
+    plot_main(measures=measures,axes=axes,measures_imit=measures_imit,compare={gpref+i:j for i,j in GROUPS_COMPARE.items()},
+        #theory=theory,Svar=Svar,
+        split_by=split_by,log='x',dictionary=dico,traits=[gpref+i for i in ['totN','Phi']],
+        show_direct_calc=1,subplots=1)
 
 def intersection(rerun=1,measure=0,nsys=100,show=0):
     #Comparison between competitive trophic
@@ -679,7 +693,7 @@ def intersection(rerun=1,measure=0,nsys=100,show=0):
         make_measures(path,use_measures=['usual',
             'effective',
             'abundance',
-            measure_cavity,],death=10**-8,update_prev=0)
+            measure_cavity,],update_prev=0)
 
     measures=open_measures(path)
     kwargs={}
@@ -776,7 +790,7 @@ def resource_axis(path=Path('interp_resource_axis'),mode='niche',rerun=0,measure
             #'removal',
             #'testcavity',
             #measure_resource
-            ],death=10**-8,update_prev=0)
+            ],update_prev=0)
 
     if not show:
         return

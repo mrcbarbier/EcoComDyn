@@ -12,9 +12,9 @@ path = Path('RESULTS/resource_comp')
 
 resource_gen(path=path,
             mode='RX',
-            rerun=RERUN,measure=1,nsys=70,show=1,imit=0,hold=1)
+            rerun=RERUN,measure=1,nsys=40,show=1,imit=0,hold=1)
 plt.suptitle('Figure 2')
-
+plt.show()
 ### FIGURE 3 -- PARAMETER SPACE
 print 'FIGURE 3'
 
@@ -43,7 +43,7 @@ plt.figure()
 for mode in ['competition', 'mutualism', 'predation']:
     ordering(path=Path(path),funcresp=False,
              mode=mode, struct='all',
-             rerun=RERUN, measure=1, nsys=100, sysmin=0, show=0)
+             rerun=RERUN, measure=0, nsys=100, sysmin=0, show=0)
 
 show_ordering(path=path,hold=1)
 plt.suptitle('Figure 4')

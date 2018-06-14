@@ -57,7 +57,7 @@ def aggregate_groups(measure):
 
     return new
 
-def group_interactions(Smean,Aij,mwhere,return_all=0,remove_diag=0):
+def group_interactions(Smean,Aij,mwhere,return_all=0,remove_diag=1):
     '''Compute mu,gamma... per group, given interaction matrix Aij and mwhere=[ [idxs of group 1], [...]]'''
     from itertools import product as iprod
 

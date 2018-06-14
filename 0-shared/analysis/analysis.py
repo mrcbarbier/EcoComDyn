@@ -234,6 +234,8 @@ def make_measures(path,use_measures=(),maxsize=10*10**9,filespath=None,
             #Externally provided measure functions
             txts=[]
             for meas in use_measures:
+                if meas is None:
+                    continue
                 if isinstance(meas,basestring):
                     txts.append(meas)
                 else:
